@@ -25,12 +25,19 @@ public class Processes {
      * Time Complexity is O(n).
      *
      * @return Returns a Map of the arp table. Constructed in the following way:
+     * <p>
      * arp_table - Map
+     * <p>
      *       ├── [key] arp interface as key ex. (10.10.1.15 --- 0x10)
+     * <p>
      *       └── [value] Arraylist String[] of values
+     * <p>
      *             ├── arp entry array item - Internet Address example (10.10.1.1)
+     * <p>
      *             ├── arp entry array item - Physical Address example (00-00-00-00-00-00)
+     * <p>
      *             └── arp entry array item - Type example (static|dynamic)
+     * <p>
      * Logging at an Info level will output all arp entries.
      */
     public static Map<String, ArrayList<String[]>> arp_parser() {
@@ -77,7 +84,7 @@ public class Processes {
                     logger.log(Level.INFO, "Extracted arp entry on {0}; " +
                             "Internet Address: {1}; " +
                             "Physical Address: {2}; " +
-                            "Type: {3}; ", new Object[]{arp_interface, arp_entry[0], arp_entry[1], arp_entry[2]});
+                            "Type: {3}; ", new Object[]{arp_interface, arp_entry[1], arp_entry[2], arp_entry[3]});
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // ArrayIndexOutOfBoundsException occurred. Need to log as severe.
                     logger.log(Level.SEVERE, "Exception occurred: {0}, Type: {1}",
@@ -95,7 +102,7 @@ public class Processes {
     }
     public static void main(String[] args) {
         // Setting logging level to INFO will output all arp entries.
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.WARNING);
 
         // Running arp_parser function.
         arp_parser();

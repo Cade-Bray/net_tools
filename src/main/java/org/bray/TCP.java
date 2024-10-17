@@ -5,6 +5,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,6 +62,18 @@ public class TCP {
         return ports;
     }
 
+    public static Map<String, ArrayList<Integer>> local_subnet_Full_TCP(ArrayList<Integer> port_range, int timeout) {
+        // This Array will contain the return of ports open on a host.
+        Map<String, ArrayList<Integer>> ports_open = new HashMap<>();
+        Map<String, ArrayList<String[]>> stringArrayListMap = Processes.arp_parser();
+        for (String key: stringArrayListMap.keySet()) {
+            for (String[] entry: stringArrayListMap.get(key)) {
+                ports_open.put(entry[0], check_TCP_ports(entry[0], port_range, timeout));
+            }
+        }
+        return ports_open;
+    }
+
     public static void main(String[] args) {
         // Setting logging level to warning will output only connections.
         // For closed ports switch to info level logging.
@@ -70,7 +84,6 @@ public class TCP {
                 Integer.parseInt(args[2])));
 
         //Input Host as first parameter and timeout in milliseconds as last parameter.
-        ArrayList<Integer> ports = check_TCP_ports(args[0], ports_to_scan, Integer.parseInt(args[3]));
-
+        Map<String, ArrayList<Integer>> ports = local_subnet_Full_TCP(ports_to_scan, Integer.parseInt(args[3]));
     }
 }
