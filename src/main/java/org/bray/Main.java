@@ -13,15 +13,19 @@ public class Main {
      */
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
+    // Coloring for the welcome message.
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_RESET = "\u001B[0m";
+
     public static void welcome() {
-        System.out.println("___________________________________________________");
+        System.out.println(ANSI_GREEN + "___________________________________________________");
         System.out.println("    _   ______________ __________  ____  __   _____");
         System.out.println("   / | / / ____/_  __//_  __/ __ \\/ __ \\/ /  / ___/");
         System.out.println("  /  |/ / __/   / /    / / / / / / / / / /   \\__ \\");
         System.out.println(" / /|  / /___  / /    / / / /_/ / /_/ / /______/ /");
         System.out.println("/_/ |_/_____/ /_/____/_/  \\____/\\____/_____/____/");
         System.out.println("               /_____/                             ");
-        System.out.println("_______________________________v.0.1.0-alpha_______");
+        System.out.println("_______________________________v.0.1.0-alpha_______" + ANSI_RESET);
     }
 
     public static void main(String[] args) {
