@@ -62,6 +62,20 @@ public class TCP {
         return ports;
     }
 
+    /**
+     * Function to perform a full TCP port scan on the local subnet.
+     * <p>
+     * Time Complexity is O(n * m * i), where n is the number of hosts, m is the number of ports,
+     * and i is the number of network interfaces.
+     *
+     * <p>
+     * This function uses the ARP table to identify hosts on the local subnet and then performs a TCP port scan
+     * on each host within the specified port range.
+     *
+     * @param port_range an ArrayList of two integers specifying the starting and ending ports to scan. Cannot be null.
+     * @param timeout an integer specifying the timeout in milliseconds for each port scan attempt.
+     * @return Returns a Map where the key is the host address and the value is an ArrayList of open ports on that host.
+     */
     public static Map<String, ArrayList<Integer>> local_subnet_Full_TCP(ArrayList<Integer> port_range, int timeout) {
         // This Array will contain the return of ports open on a host.
         Map<String, ArrayList<Integer>> ports_open = new HashMap<>();
