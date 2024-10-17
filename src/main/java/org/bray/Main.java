@@ -124,7 +124,7 @@ public class Main {
     }
 
     /**
-     * Function for running port checks on a device.
+     * Function for running TCP port checks on a device.
      * <p>
      * Time Complexity is O(n).
      *
