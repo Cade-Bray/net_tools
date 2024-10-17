@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,26 +19,28 @@ public class Processes {
      */
     private static final Logger logger = Logger.getLogger(Processes.class.getName());
 
+    public static String[][] addArrayTo2DArray(String[][] original, String[] newArray) {
+        String[][] newArray2D = new String[original.length + 1][];
+        System.arraycopy(original, 0, newArray2D, 0, original.length);
+        newArray2D[original.length] = newArray;
+        return newArray2D;
+    }
+
     /**
      * Function to parse the arp table of a device.
      * <p>
-     * Time Complexity is O(n^2).
+     * Time Complexity is O(n).
      *
      * @return Returns an ArrayList of Maps that contain the IP address as the key and the arp entry as the value.
      */
-    public static ArrayList<Map<String, ArrayList<String>>> arp_parser() {
+    public static Map<String, String[][]> arp_parser() {
+        Map<String, String[][]> arp_table = new HashMap<>();
 
-        // Structure explained.
-        // arp_table - ArrayList
-        // ├── Map - arp interface key as (10.10.1.15 --- 0x10) to arp entry Arraylist of strings
-        // │   ├── arp entry array item - Internet Address example (10.10.1.1)
-        // │   ├── arp entry array item - Physical Address example (00-00-00-00-00-00)
-        // │   └── arp entry array item - Type example (static|dynamic)
-        // └── Map - arp interface key as (10.10.1.16 --- 0x2e) to arp entry Arraylist of strings
-        //     ├── arp entry array item - Internet Address example (10.10.1.55)
-        //     ├── arp entry array item - Physical Address example (00-00-00-00-00-01)
-        //     └── arp entry array item - Type example (static|dynamic)
-        ArrayList<Map<String, ArrayList<String>>> arp_table = new ArrayList<>();
+//      Structure explained.
+//      arp_table - Map - arp interface as key ex. (10.10.1.15 --- 0x10) to arp entry Arraylist of strings
+//      ├── arp entry array item - Internet Address example (10.10.1.1)
+//      ├── arp entry array item - Physical Address example (00-00-00-00-00-00)
+//      └── arp entry array item - Type example (static|dynamic)
 
         // Try-catch used for process creation failures.
         try {
@@ -66,39 +68,19 @@ public class Processes {
                         arp_entry = line.split("\\s+");
                     }
 
-                    for (Map<String, ArrayList<String>> map : arp_table) {
-                        if (map.containsKey(arp_interface)) {
-                            // Adding the arp entry to the arp_table that already has an arp_interface.
-                            map.get(arp_interface).add(arp_entry[1]);
-                            map.get(arp_interface).add(arp_entry[2]);
-                            map.get(arp_interface).add(arp_entry[3]);
-                            // Logging the arp entry.
-                            logger.log(Level.INFO, "Extracted arp entry on {0}; " +
-                                    "Internet Address: {1}; " +
-                                    "Physical Address: {2}; " +
-                                    "Type: {3}; ", new Object[]{arp_interface, arp_entry[0], arp_entry[1], arp_entry[2]});
-                            arp_entry = new String[0];
-                            break;
-                        }
+                    // Creating the arp table.
+                    if (arp_table.containsKey(arp_interface)) {
+                        arp_table.put(arp_interface, addArrayTo2DArray(arp_table.get(arp_interface),
+                                new String[]{arp_entry[1], arp_entry[2], arp_entry[3]}));
+                    } else {
+                        arp_table.put(arp_interface, new String[][]{{arp_entry[1], arp_entry[2], arp_entry[3]}});
                     }
 
-                    // Adding the arp entry to the arp_table that does not have an arp_interface added yet.
-                    // This is done by checking if the arp_entry is empty
-                    // Because if the arp_entry is empty then it was already assigned to a map.
-                    if (arp_entry.length != 0) {
-                        arp_table.add(
-                                // Using Map.of to create a new map with the key as the IP address and the value as the arp entry.
-                                Map.of(arp_interface, new ArrayList<>(
-                                        // Adding the arp entry to the arp_table.
-                                        Arrays.asList(arp_entry[1], arp_entry[2], arp_entry[3]))
-                                )
-                        );
-                        // Logging the arp entry.
-                        logger.log(Level.INFO, "Extracted arp entry on {0}; " +
-                                "Internet Address: {1}; " +
-                                "Physical Address: {2}; " +
-                                "Type: {3}; ", new Object[]{arp_interface, arp_entry[0], arp_entry[1], arp_entry[2]});
-                    }
+                    // Logging the arp entry.
+                    logger.log(Level.INFO, "Extracted arp entry on {0}; " +
+                            "Internet Address: {1}; " +
+                            "Physical Address: {2}; " +
+                            "Type: {3}; ", new Object[]{arp_interface, arp_entry[0], arp_entry[1], arp_entry[2]});
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // ArrayIndexOutOfBoundsException occurred. Need to log as severe.
                     logger.log(Level.SEVERE, "Exception occurred: {0}, Type: {1}",
@@ -119,7 +101,7 @@ public class Processes {
         logger.setLevel(Level.INFO);
 
         // Running arp_parser function.
-        ArrayList<Map<String, ArrayList<String>>> A = arp_parser();
+        Map<String, String[][]> A = arp_parser();
         System.out.println(A);
     }
 }
