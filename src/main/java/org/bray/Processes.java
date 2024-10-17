@@ -24,16 +24,17 @@ public class Processes {
      * <p>
      * Time Complexity is O(n).
      *
-     * @return Returns an ArrayList of Maps that contain the IP address as the key and the arp entry as the value.
+     * @return Returns a Map of the arp table. Constructed in the following way:
+     * arp_table - Map
+     *       ├── [key] arp interface as key ex. (10.10.1.15 --- 0x10)
+     *       └── [value] Arraylist String[] of values
+     *             ├── arp entry array item - Internet Address example (10.10.1.1)
+     *             ├── arp entry array item - Physical Address example (00-00-00-00-00-00)
+     *             └── arp entry array item - Type example (static|dynamic)
+     * Logging at an Info level will output all arp entries.
      */
     public static Map<String, ArrayList<String[]>> arp_parser() {
         Map<String, ArrayList<String[]>> arp_table = new HashMap<>();
-
-//      Structure explained.
-//      arp_table - Map - arp interface as key ex. (10.10.1.15 --- 0x10) to arp entry Arraylist of strings
-//      ├── arp entry array item - Internet Address example (10.10.1.1)
-//      ├── arp entry array item - Physical Address example (00-00-00-00-00-00)
-//      └── arp entry array item - Type example (static|dynamic)
 
         // Try-catch used for process creation failures.
         try {
@@ -63,8 +64,10 @@ public class Processes {
 
                     // Creating the arp table.
                     if (arp_table.containsKey(arp_interface)) {
+                        // Adding the arp entry to the arp table that already exists.
                         arp_table.get(arp_interface).add(new String[]{arp_entry[1], arp_entry[2], arp_entry[3]});
                     } else {
+                        // Creating a new arp table entry.
                         ArrayList<String[]> temp = new ArrayList<>();
                         temp.add(new String[]{arp_entry[1], arp_entry[2], arp_entry[3]});
                         arp_table.put(arp_interface, temp);
@@ -95,7 +98,6 @@ public class Processes {
         logger.setLevel(Level.INFO);
 
         // Running arp_parser function.
-        Map<String, ArrayList<String[]>> A = arp_parser();
-        System.out.println(A);
+        arp_parser();
     }
 }
