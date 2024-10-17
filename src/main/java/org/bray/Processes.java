@@ -19,13 +19,6 @@ public class Processes {
      */
     private static final Logger logger = Logger.getLogger(Processes.class.getName());
 
-    public static String[][] addArrayTo2DArray(String[][] original, String[] newArray) {
-        String[][] newArray2D = new String[original.length + 1][];
-        System.arraycopy(original, 0, newArray2D, 0, original.length);
-        newArray2D[original.length] = newArray;
-        return newArray2D;
-    }
-
     /**
      * Function to parse the arp table of a device.
      * <p>
@@ -33,8 +26,8 @@ public class Processes {
      *
      * @return Returns an ArrayList of Maps that contain the IP address as the key and the arp entry as the value.
      */
-    public static Map<String, String[][]> arp_parser() {
-        Map<String, String[][]> arp_table = new HashMap<>();
+    public static Map<String, ArrayList<String[]>> arp_parser() {
+        Map<String, ArrayList<String[]>> arp_table = new HashMap<>();
 
 //      Structure explained.
 //      arp_table - Map - arp interface as key ex. (10.10.1.15 --- 0x10) to arp entry Arraylist of strings
@@ -70,10 +63,11 @@ public class Processes {
 
                     // Creating the arp table.
                     if (arp_table.containsKey(arp_interface)) {
-                        arp_table.put(arp_interface, addArrayTo2DArray(arp_table.get(arp_interface),
-                                new String[]{arp_entry[1], arp_entry[2], arp_entry[3]}));
+                        arp_table.get(arp_interface).add(new String[]{arp_entry[1], arp_entry[2], arp_entry[3]});
                     } else {
-                        arp_table.put(arp_interface, new String[][]{{arp_entry[1], arp_entry[2], arp_entry[3]}});
+                        ArrayList<String[]> temp = new ArrayList<>();
+                        temp.add(new String[]{arp_entry[1], arp_entry[2], arp_entry[3]});
+                        arp_table.put(arp_interface, temp);
                     }
 
                     // Logging the arp entry.
@@ -101,7 +95,7 @@ public class Processes {
         logger.setLevel(Level.INFO);
 
         // Running arp_parser function.
-        Map<String, String[][]> A = arp_parser();
+        Map<String, ArrayList<String[]>> A = arp_parser();
         System.out.println(A);
     }
 }
