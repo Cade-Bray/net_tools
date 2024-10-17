@@ -55,7 +55,11 @@ public class Main {
 
     /**
      * Class for running port checks on a device.
+     * <p>
      * Time Complexity is O(n).
+     *
+     * <p>
+     * Running checks for TCP ports on a device.
      *
      * @param  host provide an address to check such as 10.10.1.14
      * @param port_range is a two integer array of the starting port and ending port. Cannot be Null.
