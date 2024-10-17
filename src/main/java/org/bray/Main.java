@@ -60,8 +60,6 @@ public class Main {
             while ((line = reader.readLine()) != null) {
                 // Splitting the line by whitespace.
                 try {
-                    System.out.println(line);
-
                     // Skip if the line is empty or contains Internet Address.
                     if (line.isEmpty() || line.contains("Internet Address")) {
                         continue;
@@ -80,6 +78,11 @@ public class Main {
                             map.get(arp_interface).add(arp_entry[1]);
                             map.get(arp_interface).add(arp_entry[2]);
                             map.get(arp_interface).add(arp_entry[3]);
+                            // Logging the arp entry.
+                            logger.log(Level.INFO, "Extracted arp entry on {0}; " +
+                                    "Internet Address: {1}; " +
+                                    "Physical Address: {2}; " +
+                                    "Type: {3}; ", new Object[]{arp_interface, arp_entry[0], arp_entry[1], arp_entry[2]});
                             arp_entry = new String[0];
                             break;
                         }
@@ -96,16 +99,15 @@ public class Main {
                                         Arrays.asList(arp_entry[1], arp_entry[2], arp_entry[3]))
                                 )
                         );
+                        // Logging the arp entry.
+                        logger.log(Level.INFO, "Extracted arp entry on {0}; " +
+                                "Internet Address: {1}; " +
+                                "Physical Address: {2}; " +
+                                "Type: {3}; ", new Object[]{arp_interface, arp_entry[0], arp_entry[1], arp_entry[2]});
                     }
 
                     // Resetting the arp_entry.
                     arp_entry = new String[0];
-
-                    // Logging the arp entry.
-                    logger.log(Level.INFO, "Extracted arp entry on Interface {0}./n" +
-                            "Internet Address: {1}./n" +
-                            "Physical Address: {2}./n" +
-                            "Type: {3}", new Object[]{arp_interface, arp_entry[0], arp_entry[1], arp_entry[2]});
 
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // ArrayIndexOutOfBoundsException occurred. Need to log as severe.
@@ -167,7 +169,7 @@ public class Main {
     public static void main(String[] args) {
         // Setting logging level to warning will output only connections.
         // For closed ports switch to info level logging.
-        logger.setLevel(Level.WARNING);
+        logger.setLevel(Level.INFO);
 
         // ArrayList of size two initialized with ports. Change ports here for expanded/narrowed range.
         ArrayList<Integer> ports_to_scan = new ArrayList<>(Arrays.asList(Integer.parseInt(args[1]),
@@ -177,6 +179,7 @@ public class Main {
         //check_TCP_ports(args[0], ports_to_scan, Integer.parseInt(args[3]));
 
         // Running arp_parser function.
-        arp_parser();
+        ArrayList<Map<String, ArrayList<String>>> A = arp_parser();
+        System.out.println(A);
         }
     }
