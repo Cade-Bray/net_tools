@@ -22,4 +22,15 @@
 /target/site/project-info.html
 /target/site/css/site.css
 /target/site/summary.html
+
+##############################
+## Java
+##############################
+.mtj.tmp/
 *.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
