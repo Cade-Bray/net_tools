@@ -23,7 +23,15 @@ public class Main {
      */
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
-    public static void arp_parser(String[] args) {
+    /**
+     * Function to parse the arp table of a device.
+     * <p>
+     * Time Complexity is O(n).
+     *
+     * @return Returns an ArrayList of Maps that contain the IP address as the key and the arp entry as the value.
+     */
+    public static ArrayList<Map<String, ArrayList<String>>> arp_parser() {
+        ArrayList<Map<String, ArrayList<String>>> arp_table = new ArrayList<>();
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("arp", "-a");
             Process process = processBuilder.start();
@@ -39,10 +47,22 @@ public class Main {
              //     ├── arp entry array item - Internet Address example (10.10.1.55)
              //     ├── arp entry array item - Physical Address example (00-00-00-00-00-01)
              //     └── arp entry array item - Type example (static|dynamic)
-            ArrayList<Map<String, ArrayList<String>>> arp_table = new ArrayList<Map<String,ArrayList<String>>>();
             String line;
             while ((line = reader.readLine()) != null) {
-                logger.log(Level.INFO, "Extracted arp entry on Interface {0}. ");
+                // Splitting the line by whitespace.
+                String[] arp_entry = line.split("\\s+");
+                // Adding the arp entry to the arp_table.
+                arp_table.add(
+                        // Using Map.of to create a new map with the key as the IP address and the value as the arp entry.
+                        Map.of(arp_entry[0], new ArrayList<>(
+                            // Adding the arp entry to the arp_table.
+                            Arrays.asList(arp_entry[1], arp_entry[2], arp_entry[3]))
+                        )
+                    );
+                logger.log(Level.INFO, "Extracted arp entry on Interface {0}./n" +
+                        "Internet Address: {1}./n" +
+                        "Physical Address: {2}./n" +
+                        "Type: {3}", new Object[]{arp_entry[0], arp_entry[1], arp_entry[2], arp_entry[3]});
             }
 
             reader.close();
@@ -51,10 +71,11 @@ public class Main {
             logger.log(Level.SEVERE, "Exception occurred: {0}, Type: {1}",
                     new Object[]{e.getMessage(), e.getClass().getName()});
         }
+        return arp_table;
     }
 
     /**
-     * Class for running port checks on a device.
+     * Function for running port checks on a device.
      * <p>
      * Time Complexity is O(n).
      *
@@ -67,7 +88,7 @@ public class Main {
      * @return Returns an ArrayList of Integers that has all open ports. If you'd like it provided in a log file enable
      * logging at an Info level.
      */
-    public static @NotNull ArrayList<Integer> check_ports(String host, @org.jetbrains.annotations.NotNull
+    public static @NotNull ArrayList<Integer> check_TCP_ports(String host, @org.jetbrains.annotations.NotNull
     ArrayList<Integer> port_range, int timeout){
 
         // This Array will contain the return of ports open on a host.
@@ -104,6 +125,9 @@ public class Main {
                 Integer.parseInt(args[2])));
 
         //Input Host as first parameter and timeout in milliseconds as last parameter.
-        check_ports(args[0], ports_to_scan, Integer.parseInt(args[3]));
+        //check_TCP_ports(args[0], ports_to_scan, Integer.parseInt(args[3]));
+
+        // Running arp_parser function.
+        arp_parser();
         }
     }
