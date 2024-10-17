@@ -25,7 +25,7 @@ public class Main {
         System.out.println(" / /|  / /___  / /    / / / /_/ / /_/ / /______/ /");
         System.out.println("/_/ |_/_____/ /_/____/_/  \\____/\\____/_____/____/");
         System.out.println("               /_____/                             ");
-        System.out.println("_______________________________v.0.1.0-alpha_______" + ANSI_RESET);
+        System.out.println("_______________________________v.0.1.1-alpha_______" + ANSI_RESET);
     }
 
     public static void main(String[] args) {
