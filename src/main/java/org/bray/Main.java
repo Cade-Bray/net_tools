@@ -1,5 +1,7 @@
 package org.bray;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -32,5 +34,23 @@ public class Main {
         // Setting logging level to warning is recommended.
         logger.setLevel(Level.WARNING);
         welcome();
+        boolean cont = true;
+
+        while(cont){
+            switch (args[0]) {
+                case "-a":
+                    System.out.println(Processes.arp_parser());
+                    break;
+
+                case "-tcp":
+                    TCP.check_TCP_ports(args[1], new ArrayList<>(Arrays.asList(Integer.parseInt(args[1]),
+                            Integer.parseInt(args[2]))), Integer.parseInt(args[4]));
+                    break;
+
+                case "-q":
+                    cont = false;
+                    break;
+            }
         }
     }
+}

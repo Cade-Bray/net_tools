@@ -34,3 +34,4 @@
 *.nar
 hs_err_pid*
 replay_pid*
+/.idea/artifacts/net_tools_jar.xml

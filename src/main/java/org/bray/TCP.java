@@ -25,10 +25,10 @@ public class TCP {
      * Function for running TCP port checks on a device.
      * <p>
      * Time Complexity is O(n).
-     *
+     * </p>
      * <p>
      * Running checks for TCP ports on a device.
-     *
+     * </p>
      * @param  host provide an address to check such as 10.10.1.14
      * @param port_range is a two integer array of the starting port and ending port. Cannot be Null.
      * @param timeout is an integer in milliseconds before the service moves from one port to the next.
@@ -98,6 +98,8 @@ public class TCP {
                 Integer.parseInt(args[2])));
 
         //Input Host as first parameter and timeout in milliseconds as last parameter.
-        Map<String, ArrayList<Integer>> ports = local_subnet_Full_TCP(ports_to_scan, Integer.parseInt(args[3]));
+        //Map<String, ArrayList<Integer>> ports = local_subnet_Full_TCP(ports_to_scan, Integer.parseInt(args[3]));
+        ArrayList<Integer> ports = check_TCP_ports(args[0], ports_to_scan, Integer.parseInt(args[3]));
+        System.out.println(ports);
     }
 }
